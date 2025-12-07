@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebScanPro - AI-Powered Web Security Scanner</title>
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo"><i class="fa-solid fa-shield-halved"></i> WebScanPro</div>
+        <ul class="nav-links">
+            <li><a href="#" class="nav-item active" data-target="home">Home</a></li>
+            <li><a href="#" class="nav-item" data-target="scan-input">Start Scan</a></li>
+            <li><a href="#" class="nav-item" data-target="results">Dashboard</a></li>
+            <li><a href="#" class="nav-item" data-target="reports">Reports</a></li>
+            <li><a href="#" class="nav-item" data-target="docs">Docs</a></li>
+            <li><button id="theme-toggle" class="theme-btn"><i class="fa-solid fa-moon"></i></button></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        
+        <section id="home" class="page-section active">
+            <div class="hero">
+                <h1>AI-Powered Automated Web Security Scanner</h1>
+                <p class="tagline">Scan websites, detect vulnerabilities, analyze with ML, and generate reports automatically.</p>
+                <button class="btn-primary" onclick="navigateTo('scan-input')">Start Scan Now</button>
+            </div>
+            <div class="features-grid">
+                <div class="card feature-card"><i class="fa-solid fa-database"></i><h3>SQL Injection</h3><p>Payload Injectors & Signature Analysis.</p></div>
+                <div class="card feature-card"><i class="fa-solid fa-code"></i><h3>XSS Detection</h3><p>DOM-response Checking & Script Injection.</p></div>
+                <div class="card feature-card"><i class="fa-solid fa-lock"></i><h3>Auth Security</h3><p>Session Token & Credential Validation.</p></div>
+                <div class="card feature-card"><i class="fa-solid fa-robot"></i><h3>IDOR Testing</h3><p>Privilege Escalation & Access Control.</p></div>
+            </div>
+        </section>
+
+        <section id="scan-input" class="page-section">
+            <div class="scan-container">
+                <h2>Start New Scan</h2>
+                <p style="margin-bottom: 20px; color: #666;">Configure your scan parameters and select specific modules.</p>
+                <form id="scan-form">
+                    <div class="form-group">
+                        <label>Enter URL to scan</label>
+                        <input type="url" id="target-url" placeholder="http://example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Scan Module Configuration</label>
+                        <select id="scan-type">
+                            <option value="full">Full Scan (All Modules)</option>
+                            <option value="sqli">SQL Injection (Payload Injector / ML)</option>
+                            <option value="xss">XSS (Script Injection / DOM Checker)</option>
+                            <option value="auth">Authentication (Token & Cookie Test)</option>
+                            <option value="idor">IDOR (Access Control / Privilege)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%; font-size: 1.1rem;">Start Comprehensive Scan</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="scan-progress" class="page-section">
+            <h2>Scanning Dashboard</h2>
+            <div class="progress-wrapper">
+                <div class="progress-bar-bg"><div id="progress-fill" class="progress-bar-fill" style="width: 0%"></div></div>
+                <p id="progress-text">0% Complete</p>
+            </div>
+            <div class="logs-container">
+                <div class="log-header">Live Scanner Logs</div>
+                <div id="log-window" class="log-window"></div>
+            </div>
+            <button id="stop-btn" class="btn-danger">Stop / Pause</button>
+        </section>
+
+        <section id="results" class="page-section">
+            <h2>Vulnerability Summary</h2>
+            <div class="summary-stats">
+                <div class="stat-box critical"><h3>Total Vulnerabilities</h3><span id="total-vulns-count">0</span></div>
+                <div class="stat-box warning"><h3>Risk Score</h3><span id="risk-score">Safe</span></div>
+            </div>
+            <div class="charts-container">
+                <div class="chart-box"><canvas id="vulnTypeChart"></canvas></div>
+                <div class="chart-box"><canvas id="severityChart"></canvas></div>
+            </div>
+            <div class="table-wrapper">
+                <h3>Detailed Findings</h3>
+                <table class="results-table">
+                    <thead><tr><th>Type</th><th>Technique Used</th><th>Param</th><th>Severity</th></tr></thead>
+                    <tbody id="results-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="reports" class="page-section">
+            <h2>Download Reports</h2>
+            <div class="report-options">
+                <div class="report-card">
+                    <i class="fa-solid fa-file-code"></i><h3>HTML Report</h3>
+                    <button class="btn-secondary" onclick="downloadReport('html')">Download HTML</button>
+                </div>
+                <div class="report-card">
+                    <i class="fa-solid fa-file-pdf"></i><h3>PDF Report</h3>
+                    <button class="btn-secondary" onclick="downloadReport('pdf')">Download PDF</button>
+                </div>
+                <div class="report-card">
+                    <i class="fa-solid fa-file-json"></i><h3>JSON Data</h3>
+                    <button class="btn-secondary" onclick="downloadReport('json')">Download JSON</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="docs" class="page-section">
+            <h2>Documentation</h2>
+            <div class="docs-content">
+                <div class="flowchart-container">
+                    <div class="flow-step">1. User Input</div>
+                    <div class="arrow">➜</div>
+                    <div class="flow-step">2. Module Selection</div>
+                    <div class="arrow">➜</div>
+                    <div class="flow-step">3. Injection & Analysis</div>
+                    <div class="arrow">➜</div>
+                    <div class="flow-step">4. Report</div>
+                </div>
+                <p style="margin-top:20px">Our scanner utilizes specialized modules for each vulnerability type:</p>
+                <ul style="margin-left:20px; line-height:1.6;">
+                    <li><strong>SQLi:</strong> Payload Injector, Signature-based Analyzer.</li>
+                    <li><strong>XSS:</strong> DOM-response Checker, Script Injection.</li>
+                    <li><strong>Auth:</strong> Session Token Validator.</li>
+                    <li><strong>IDOR:</strong> Privilege Escalation Testing.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 WebScanPro. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
